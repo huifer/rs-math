@@ -1,0 +1,16 @@
+[package]
+name = "rs-math"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+approx = { version = "0.5.0", features = [] }
+log = "0.4.20"
+env_logger = "0.10"
+[dev-dependencies]
+ctor = "0.1.19"
+[[test]]
+name = "all_test"
+path = "tests/lib.rs"
