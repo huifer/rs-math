@@ -39,19 +39,22 @@ impl Circle {
         }
     }
     /// 三个点算圆
-    pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Circle {
-        // 计算圆心坐标 (h, k)
-        let h = (p1.x + p2.x) / 2.0;
-        let k = (p1.y + p2.y) / 2.0;
+/// 三个点算圆
+pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
+    // 计算圆心坐标 (h, k)
+    let h = (p1.x + p2.x) / 2.0;
+    let k = (p1.y + p2.y) / 2.0;
 
-        // 计算半径 r
-        let r = ((p1.x - h).powi(2) + (p1.y - k).powi(2)).sqrt();
+    // 计算半径 r
+    let mut r = ((p1.x - h).powi(2) + (p1.y - k).powi(2)).sqrt();
 
-        // 检查第三个点是否在圆上
-        if (p3.x - h).powi(2) + (p3.y - k).powi(2) == r.powi(2) {} else {};
-
-        Circle { x: h, y: k, radius: r }
+    // 检查第三个点是否在圆上
+    if (p3.x - h).powi(2) + (p3.y - k).powi(2) == r.powi(2) {
+        Some(Circle { x: h, y: k, radius: r })
+    } else {
+        None
     }
+}
     /// 创建一个新的圆实例
     pub fn new(x: f64, y: f64, radius: f64) -> Circle {
         Circle { x, y, radius }
