@@ -71,5 +71,21 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_circle_line_intersection() {
+        let circle = Circle { x: 0.0, y: 0.0, radius: 5.0 };
+
+        let line_point1 = Point { x: -8.0, y: 0.0 };
+        let line_point2 = Point { x: 8.0, y: 0.0 };
+        let intersections = circle.find_line_intersection(&line_point1, &line_point2);
+        assert_eq!(intersections.len(), 2);
+        assert!(intersections.contains(&Point { x: -5.0, y: 0.0 }));
+        assert!(intersections.contains(&Point { x: 5.0, y: 0.0 }));
+
+
+    }
+
+
+
 
 }
