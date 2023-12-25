@@ -62,7 +62,7 @@ mod tests {
         let circle = Circle::from_points_and_radius(&point1, &point2, radius);
 
         assert_eq!(
-            circle,
+            circle.unwrap(),
             Circle {
                 x: 2.0,
                 y: 0.0,

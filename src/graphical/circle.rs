@@ -13,14 +13,8 @@ pub struct Circle {
 }
 
 impl Circle {
-    /// 通过两个点和半径创建圆
-    pub fn from_two_points_and_radius(point1: &Point, point2: &Point, radius: f64) -> Circle {
-        let h = (point1.x + point2.x) / 2.0;
-        let k = (point1.y + point2.y) / 2.0;
-        Circle { x: h, y: k, radius }
-    }
     /// 通过两点和半径创建圆
-    pub fn from_points_and_radius(point1: &Point, point2: &Point, radius: f64) -> Circle {
+    pub fn from_points_and_radius(point1: &Point, point2: &Point, radius: f64) -> Option<Circle> {
         // 计算圆心的中点坐标
         let center_x = (point1.x + point2.x) / 2.0;
         let center_y = (point1.y + point2.y) / 2.0;
@@ -29,32 +23,35 @@ impl Circle {
         let distance = ((point2.x - point1.x).powi(2) + (point2.y - point1.y).powi(2)).sqrt();
 
         info!("圆的半径为 {}，圆心为 ({}, {})", radius, center_x, center_y);
-        if radius == distance / 2.0 {
-        }
         // 验证半径是否有效
-        Circle {
-            x: center_x,
-            y: center_y,
-            radius,
-        }
+        if radius == distance / 2.0 {
+            Some(Circle {
+                x: center_x,
+                y: center_y,
+                radius,
+            }
+            )
+        } else { None }
     }
     /// 三个点算圆
-/// 三个点算圆
-pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
-    // 计算圆心坐标 (h, k)
-    let h = (p1.x + p2.x) / 2.0;
-    let k = (p1.y + p2.y) / 2.0;
+    pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
+        // 计算圆心坐标 (h, k)
+        let h = (p1.x + p2.x) / 2.0;
+        let k = (p1.y + p2.y) / 2.0;
 
-    // 计算半径 r
-    let mut r = ((p1.x - h).powi(2) + (p1.y - k).powi(2)).sqrt();
+        // 计算半径 r
+        let r = ((p1.x - h).powi(2) + (p1.y - k).powi(2)).sqrt();
 
-    // 检查第三个点是否在圆上
-    if (p3.x - h).powi(2) + (p3.y - k).powi(2) == r.powi(2) {
-        Some(Circle { x: h, y: k, radius: r })
-    } else {
-        None
+        // 检查第三个点是否在圆上
+        let distance_to_center_squared = (p3.x - h).powi(2) + (p3.y - k).powi(2);
+        let epsilon = 1e-6; // 设置一个小的误差范围
+
+        if (distance_to_center_squared - r.powi(2)).abs() < epsilon {
+            Some(Circle { x: h, y: k, radius: r })
+        } else {
+            None
+        }
     }
-}
     /// 创建一个新的圆实例
     pub fn new(x: f64, y: f64, radius: f64) -> Circle {
         Circle { x, y, radius }
@@ -70,6 +67,7 @@ pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
         let distance_squared = (point_x - self.x).powi(2) + (point_y - self.y).powi(2);
         distance_squared <= self.radius.powi(2)
     }
+    /// 生产圆上的点
     pub fn generate_points(&self, num_points: usize) -> Vec<Point> {
         return generate_points_on_circle(self.x, self.y, self.radius, num_points);
     }
@@ -177,8 +175,7 @@ pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
     /// circle_x >= rect.x1 && circle_x <= rect.x2 && (circle_y == rect.y1 || circle_y == rect.y2)
     /// 圆心在矩形的 x 或 y 范围的一个边界上，但不在矩形内部。
     pub fn circle_on_rectangle_edge(&self, rect: &Rectangle) -> bool {
-        (self.x == rect.x1 || self.x == rect.x2) && self.y >= rect.y1 && self.y <= rect.y2
-            || self.x >= rect.x1 && self.x <= rect.x2 && (self.y == rect.y1 || self.y == rect.y2)
+        (self.x == rect.x1 || self.x == rect.x2) && self.y >= rect.y1 && self.y <= rect.y2 || self.x >= rect.x1 && self.x <= rect.x2 && (self.y == rect.y1 || self.y == rect.y2)
     }
 
     /// 判断圆心是否在矩形的角上
@@ -192,10 +189,7 @@ pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
     /// (circle_x == rect.x2 && circle_y == rect.y2)
     /// 圆心在矩形的 x 或 y 范围的一个边界上，并且与另一个边界相交。
     pub fn circle_on_rectangle_corner(&self, rect: &Rectangle) -> bool {
-        (self.x == rect.x1 && self.y == rect.y1)
-            || (self.x == rect.x1 && self.y == rect.y2)
-            || (self.x == rect.x2 && self.y == rect.y1)
-            || (self.x == rect.x2 && self.y == rect.y2)
+        (self.x == rect.x1 && self.y == rect.y1) || (self.x == rect.x1 && self.y == rect.y2) || (self.x == rect.x2 && self.y == rect.y1) || (self.x == rect.x2 && self.y == rect.y2)
     }
 
 

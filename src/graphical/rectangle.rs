@@ -1,16 +1,19 @@
 use crate::graphical::circle::Circle;
+use crate::graphical::point::Point;
 
 #[derive(Debug, PartialEq)]
 pub struct Rectangle {
+    /// 左上角顶点
     pub x1: f64,
     pub y1: f64,
+    /// 右下角顶点
     pub x2: f64,
     pub y2: f64,
 }
 
 
 impl Rectangle {
-    ///
+    /// 构建矩形
     pub fn new_from_corner(x: f64, y: f64, width: f64, height: f64) -> Self {
         match (x, y) {
             (x1, y1) if x1 + width <= x && y1 + height <= y => {
@@ -54,13 +57,11 @@ impl Rectangle {
     }
 
     /// 缩放矩形
-    pub fn scale(&mut self, factor: f64) {
-        self.x1 *= factor;
-        self.y1 *= factor;
-        self.x2 *= factor;
-        self.y2 *= factor;
+    pub fn scale(&mut self, sx: f64, sy: f64) {
+        // 计算新的右下角顶点坐标
+        self.x2 = self.x1 + sx * (self.x2 - self.x1);
+        self.y2 = self.y1 + sy * (self.y2 - self.y1);
     }
-
 
     /// 求四个顶点
     fn rectangle_corners(r: &Rectangle) -> (Point, Point, Point, Point) {
@@ -77,15 +78,15 @@ impl Rectangle {
     }
 
 
-    /// 每个点都旋转一个角度
-    fn rotate_rectangle(rect: &Rectangle, angle: f64) -> Rectangle {
-        let cos_theta = angle.cos();
-        let sin_theta = angle.sin();
+    /// 旋转一个矩形（绕原点）
+    pub fn rotate(&mut self, angle: f64) -> Rectangle {
+        // 计算旋转后的左上角顶点坐标
+        let new_x1 = self.x1 * angle.cos() - self.y1 * angle.sin();
+        let new_y1 = self.x1 * angle.sin() + self.y1 * angle.cos();
 
-        let new_x1 = rect.x1 * cos_theta - rect.y1 * sin_theta;
-        let new_y1 = rect.x1 * sin_theta + rect.y1 * cos_theta;
-        let new_x2 = rect.x2 * cos_theta - rect.y2 * sin_theta;
-        let new_y2 = rect.x2 * sin_theta + rect.y2 * cos_theta;
+        // 计算旋转后的右下角顶点坐标
+        let new_x2 = self.x2 * angle.cos() - self.y2 * angle.sin();
+        let new_y2 = self.x2 * angle.sin() + self.y2 * angle.cos();
 
         Rectangle {
             x1: new_x1,
@@ -99,22 +100,57 @@ impl Rectangle {
         (self.x2 - self.x1) * (self.y2 - self.y1)
     }
 
-    /// 根据点旋转
-    fn rotate_rectangle_with_point(rect: &Rectangle, center: Point, angle: f64) -> Rectangle {
-        // 计算旋转矩阵的元素
-        let cos_theta = angle.cos();
-        let sin_theta = angle.sin();
 
-        // 计算旋转后的矩形的四个顶点坐标
-        let new_x1 = (rect.x1 - center.x) * cos_theta - (rect.y1 - center.y) * sin_theta + center.x;
-        let new_y1 = (rect.x1 - center.x) * sin_theta + (rect.y1 - center.y) * cos_theta + center.y;
-        let new_x2 = (rect.x2 - center.x) * cos_theta - (rect.y2 - center.y) * sin_theta + center.x;
-        let new_y2 = (rect.x2 - center.x) * sin_theta + (rect.y2 - center.y) * cos_theta + center.y;
+    /// 计算周长
+    pub fn perimeter(&self) -> f64 {
+        // 计算矩形的宽度和高度
+        let width = self.x2 - self.x1;
+        let height = self.y2 - self.y1;
 
-        // 创建并返回旋转后的矩形
-        Rectangle { x1: new_x1, y1: new_y1, x2: new_x2, y2: new_y2 }
+        // 计算矩形的周长
+        let perimeter = 2.0 * (width + height);
+
+        perimeter.abs() // 确保周长为正数
     }
 
+    /// 判断点是否在矩形内
+    pub fn point_inside(&self, x: f64, y: f64) -> bool {
+        x >= self.x1 && x <= self.x2 && y >= self.y1 && y <= self.y2
+    }
+    /// 根据点旋转
+    pub fn rotate_around_point(&self, angle: f64, x_rot: f64, y_rot: f64) -> Rectangle {
+        // 计算中心点坐标
+        let x_c = (self.x1 + self.x2) / 2.0;
+        let y_c = (self.y1 + self.y2) / 2.0;
+
+        // 计算中心点相对于旋转点的坐标
+        let x_c_prime = x_c - x_rot;
+        let y_c_prime = y_c - y_rot;
+
+        // 使用旋转矩阵对矩形进行旋转
+        let x1_prime = (self.x1 - x_rot) * angle.cos() - (self.y1 - y_rot) * angle.sin();
+        let y1_prime = (self.x1 - x_rot) * angle.sin() + (self.y1 - y_rot) * angle.cos();
+        let x2_prime = (self.x2 - x_rot) * angle.cos() - (self.y2 - y_rot) * angle.sin();
+        let y2_prime = (self.x2 - x_rot) * angle.sin() + (self.y2 - y_rot) * angle.cos();
+
+        // 将旋转后的中心点坐标平移到旋转点
+        let x1 = x1_prime + x_rot;
+        let y1 = y1_prime + y_rot;
+        let x2 = x2_prime + x_rot;
+        let y2 = y2_prime + y_rot;
+
+        Rectangle { x1, y1, x2, y2 }
+    }
+
+    /// 判断两个矩形是否相交
+    pub fn intersect(&self, other: &Rectangle) -> bool {
+        self.x1 <= other.x2 && self.x2 >= other.x1 && self.y1 <= other.y2 && self.y2 >= other.y1
+    }
+
+    // 判断是否包含矩形
+    pub fn contains(&self, other: &Rectangle) -> bool {
+        self.x1 <= other.x1 && self.x2 >= other.x2 && self.y1 <= other.y1 && self.y2 >= other.y2
+    }
     pub fn inscribed_circle(&self) -> Circle {
         let (x, y) = &self.center();
         Circle {
