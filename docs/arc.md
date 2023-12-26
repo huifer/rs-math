@@ -270,9 +270,9 @@ struct Arc {
 
 impl Arc {
     // 计算圆弧上一点的坐标
-    fn point_on_arc(&self, angle: f64) -> (f64, f64) {
-        let x = self.radius * self.theta.cos();
-        let y = self.radius * self.theta.sin();
+    pub fn point_on_arc(&self, angle: f64) -> (f64, f64) {
+        let x = self.radius * angle.cos();
+        let y = self.radius * angle.sin();
         (x, y)
     }
 

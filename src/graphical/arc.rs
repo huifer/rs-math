@@ -2,12 +2,14 @@ use crate::graphical::point_2d::Point2D;
 use crate::graphical::linear_equation::LinearEquation;
 
 #[derive(Debug, PartialEq)]
+
 struct Arc {
     radius: f64,
     theta: f64, // 中心角，以弧度表示
 }
 
 
+#[allow(dead_code)]
 impl Arc {
     // 构造函数
     pub fn new(radius: f64, theta: f64) -> Arc {
@@ -112,8 +114,8 @@ impl Arc {
 
     /// 计算圆弧上一点的坐标
     pub fn point_on_arc(&self, angle: f64) -> (f64, f64) {
-        let x = self.radius * self.theta.cos();
-        let y = self.radius * self.theta.sin();
+        let x = self.radius * angle.cos();
+        let y = self.radius * angle.sin();
         (x, y)
     }
 
@@ -129,7 +131,7 @@ impl Arc {
         let b = x1 - x2;
         let c = x2 * y1 - x1 * y2;
 
-        LinearEquation { A: a, B: b, C: c }
+        LinearEquation { a: a, b: b, c: c }
     }
     // 计算法线方程
     pub fn normal_at_point(&self, angle: f64) -> LinearEquation {
@@ -144,9 +146,9 @@ impl Arc {
         let normal_constant = y0 - normal_slope * x0;
 
         LinearEquation {
-            A: normal_slope,
-            B: -1.0,
-            C: normal_constant,
+            a: normal_slope,
+            b: -1.0,
+            c: normal_constant,
         }
     }
 }

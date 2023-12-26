@@ -12,6 +12,7 @@ pub struct Circle {
     pub radius: f64,
 }
 
+#[allow(dead_code)]
 impl Circle {
     /// 通过两点和半径创建圆
     pub fn from_points_and_radius(point1: &Point2D, point2: &Point2D, radius: f64) -> Option<Circle> {

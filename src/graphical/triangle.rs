@@ -13,6 +13,7 @@ pub enum TriangleType {
     Right,
     Obtuse,
 }
+#[allow(dead_code)]
 impl Triangle {
     // 构造函数，创建一个新的三角形实例
     pub fn new(a: Point2D, b: Point2D, c: Point2D) -> Self {

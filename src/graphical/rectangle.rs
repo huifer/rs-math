@@ -12,6 +12,7 @@ pub struct Rectangle {
 }
 
 
+#[allow(dead_code)]
 impl Rectangle {
     /// 构建矩形
     pub fn new_from_corner(x: f64, y: f64, width: f64, height: f64) -> Self {
@@ -119,13 +120,7 @@ impl Rectangle {
     }
     /// 根据点旋转
     pub fn rotate_around_point(&self, angle: f64, x_rot: f64, y_rot: f64) -> Rectangle {
-        // 计算中心点坐标
-        let x_c = (self.x1 + self.x2) / 2.0;
-        let y_c = (self.y1 + self.y2) / 2.0;
 
-        // 计算中心点相对于旋转点的坐标
-        let x_c_prime = x_c - x_rot;
-        let y_c_prime = y_c - y_rot;
 
         // 使用旋转矩阵对矩形进行旋转
         let x1_prime = (self.x1 - x_rot) * angle.cos() - (self.y1 - y_rot) * angle.sin();
