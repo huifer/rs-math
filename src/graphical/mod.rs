@@ -4,3 +4,4 @@ pub mod rectangle;
 pub mod point;
 
 pub mod tangent;
+pub mod triangle;

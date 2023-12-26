@@ -316,7 +316,6 @@ impl Arc {
 3. **通过给定点计算法线方程的常数 $$C'$$：**
    使用法线的斜率 $$m'$$ 和给定点的坐标 $$(x_0, y_0)$$，可以得到法线方程的一般式：
    $$ Ax + By = C' $$
-   
 
 **程序解如下**
 
@@ -333,7 +332,7 @@ pub fn normal_at_point(&self, angle: f64) -> LinearEquation {
     let (x0, y0) = self.point_on_arc(angle);
     let normal_constant = y0 - normal_slope * x0;
 
-    Normal {
+    LinearEquation {
         A: normal_slope,
         B: -1.0,
         C: normal_constant,

@@ -143,7 +143,7 @@ impl Arc {
         let (x0, y0) = self.point_on_arc(angle);
         let normal_constant = y0 - normal_slope * x0;
 
-        Normal {
+        LinearEquation {
             A: normal_slope,
             B: -1.0,
             C: normal_constant,

@@ -171,7 +171,8 @@ impl Rectangle {
         let width = self.x2 - self.x1;
         let height = self.y2 - self.y1;
 
-        std::cmp::min(width, height) / 2.0
+        f64::min(width, height) / 2.0
+
     }
 }
 

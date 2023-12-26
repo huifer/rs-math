@@ -1,5 +1,5 @@
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq,Clone)]
 pub struct Point {
     pub x: f64,
     pub y: f64,
@@ -23,4 +23,9 @@ impl Point
 
         Point { x: new_x, y: new_y }
     }
+
+   pub  fn distance_to(&self, other: &Point) -> f64 {
+        ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
+    }
+
 }
