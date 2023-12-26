@@ -1,11 +1,11 @@
 use crate::graphical::circle::Circle;
-use crate::graphical::point::Point;
+use crate::graphical::point_2d::Point2D;
 
 #[derive(Debug, PartialEq)]
 pub struct Triangle {
-    pub vertex_a: Point,
-    pub vertex_b: Point,
-    pub vertex_c: Point,
+    pub vertex_a: Point2D,
+    pub vertex_b: Point2D,
+    pub vertex_c: Point2D,
 }
 #[derive(Debug, PartialEq)]
 pub enum TriangleType {
@@ -15,7 +15,7 @@ pub enum TriangleType {
 }
 impl Triangle {
     // 构造函数，创建一个新的三角形实例
-    pub fn new(a: Point, b: Point, c: Point) -> Self {
+    pub fn new(a: Point2D, b: Point2D, c: Point2D) -> Self {
         Triangle {
             vertex_a: a,
             vertex_b: b,
@@ -24,7 +24,7 @@ impl Triangle {
     }
 
     // 计算三角形的边长
-    pub fn side_length(&self, start: &Point, end: &Point) -> f64 {
+    pub fn side_length(&self, start: &Point2D, end: &Point2D) -> f64 {
         ((end.x - start.x).powi(2) + (end.y - start.y).powi(2)).sqrt()
     }
 
@@ -75,7 +75,7 @@ impl Triangle {
         }
     }
     // 绕着指定点旋转三角形，返回新的三角形实例
-    pub fn rotate_around_point(&self, center: &Point, angle_degrees: f64) -> Triangle {
+    pub fn rotate_around_point(&self, center: &Point2D, angle_degrees: f64) -> Triangle {
         // 将角度转换为弧度
         let angle_radians = angle_degrees.to_radians();
 
@@ -97,20 +97,20 @@ impl Triangle {
         }
     }
     /// 旋转单个点
-    fn rotate_point(&self, point: &Point, center: &Point, matrix: [[f64; 2]; 2]) -> Point {
+    fn rotate_point(&self, point: &Point2D, center: &Point2D, matrix: [[f64; 2]; 2]) -> Point2D {
         let translated_x = point.x - center.x;
         let translated_y = point.y - center.y;
 
         let rotated_x = matrix[0][0] * translated_x + matrix[0][1] * translated_y;
         let rotated_y = matrix[1][0] * translated_x + matrix[1][1] * translated_y;
 
-        Point {
+        Point2D {
             x: rotated_x + center.x,
             y: rotated_y + center.y,
         }
     }
     // 判断点是否在三角形内
-    pub fn point_inside_triangle(&self, p: &Point) -> bool {
+    pub fn point_inside_triangle(&self, p: &Point2D) -> bool {
         // 计算重心坐标
         let barycentric_coords = self.barycentric_coordinates(p);
 
@@ -119,7 +119,7 @@ impl Triangle {
     }
 
     // 辅助方法，计算点的重心坐标
-    fn barycentric_coordinates(&self, p: &Point) -> [f64; 3] {
+    fn barycentric_coordinates(&self, p: &Point2D) -> [f64; 3] {
         // 计算三个子三角形的面积
         let area_triangle = self.area();
         let area_sub_triangle_a = Triangle::new(p.clone(), self.vertex_b.clone(), self.vertex_c.clone()).area();
@@ -135,21 +135,21 @@ impl Triangle {
     }
 
     // 计算垂心
-    pub fn orthocenter(&self) -> Point {
+    pub fn orthocenter(&self) -> Point2D {
         let x_h = self.vertex_a.x;
         let y_h = self.vertex_b.y;
-        Point { x: x_h, y: y_h }
+        Point2D { x: x_h, y: y_h }
     }
 
     // 计算重心
-    pub fn centroid(&self) -> Point {
+    pub fn centroid(&self) -> Point2D {
         let x_g = (self.vertex_a.x + self.vertex_b.x + self.vertex_c.x) / 3.0;
         let y_g = (self.vertex_a.y + self.vertex_b.y + self.vertex_c.y) / 3.0;
-        Point { x: x_g, y: y_g }
+        Point2D { x: x_g, y: y_g }
     }
 
     // 计算内心
-    pub fn incenter(&self) -> Point {
+    pub fn incenter(&self) -> Point2D {
         let a = self.vertex_b.distance_to(&self.vertex_c);
         let b = self.vertex_c.distance_to(&self.vertex_a);
         let c = self.vertex_a.distance_to(&self.vertex_b);
@@ -158,22 +158,22 @@ impl Triangle {
         let x_i = (a * self.vertex_a.x + b * self.vertex_b.x + c * self.vertex_c.x) / (a + b + c);
         let y_i = (a * self.vertex_a.y + b * self.vertex_b.y + c * self.vertex_c.y) / (a + b + c);
 
-        Point { x: x_i, y: y_i }
+        Point2D { x: x_i, y: y_i }
     }
 
     // 计算外心
-    pub fn circumcenter(&self) -> Point {
-        let m_ab = Point {
+    pub fn circumcenter(&self) -> Point2D {
+        let m_ab = Point2D {
             x: (self.vertex_a.x + self.vertex_b.x) / 2.0,
             y: (self.vertex_a.y + self.vertex_b.y) / 2.0,
         };
 
-        let m_bc = Point {
+        let m_bc = Point2D {
             x: (self.vertex_b.x + self.vertex_c.x) / 2.0,
             y: (self.vertex_b.y + self.vertex_c.y) / 2.0,
         };
 
-        let m_ca = Point {
+        let m_ca = Point2D {
             x: (self.vertex_c.x + self.vertex_a.x) / 2.0,
             y: (self.vertex_c.y + self.vertex_a.y) / 2.0,
         };
@@ -187,7 +187,7 @@ impl Triangle {
 
         let y_o = m_ab_slope * (x_o - m_ab.x) + m_ab.y;
 
-        Point { x: x_o, y: y_o }
+        Point2D { x: x_o, y: y_o }
     }
 
     // 计算三角形的角度
@@ -212,7 +212,7 @@ impl Triangle {
     }
 
     // 计算两条边之间的角度
-    fn angle_between(&self, p1: &Point, p2: &Point, p3: &Point) -> f64 {
+    fn angle_between(&self, p1: &Point2D, p2: &Point2D, p3: &Point2D) -> f64 {
         let a = p1.distance_to(p2);
         let b = p2.distance_to(p3);
         let c = p3.distance_to(p1);

@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use rs_math::graphical::circle::{Circle, generate_points_on_circle, Point};
+    use rs_math::graphical::circle::{Circle, generate_points_on_circle, Point2D};
 
     #[test]
     fn test_circle_area() {
@@ -31,8 +31,8 @@ mod tests {
 
     #[test]
     fn test_circle_from_two_points_and_radius() {
-        let point1 = Point { x: 0.0, y: 0.0 };
-        let point2 = Point { x: 1.0, y: 0.0 };
+        let point1 = Point2D { x: 0.0, y: 0.0 };
+        let point2 = Point2D { x: 1.0, y: 0.0 };
         let radius = 1.0;
 
         let circle_from_two_points = Circle::from_two_points_and_radius(&point1, &point2, radius);
@@ -43,9 +43,9 @@ mod tests {
 
     #[test]
     fn test_circle_from_three_points() {
-        let point1 = Point { x: 0.0, y: 0.0 };
-        let point2 = Point { x: 1.0, y: 1.0 };
-        let point3 = Point { x: 0.0, y: 1.0 };
+        let point1 = Point2D { x: 0.0, y: 0.0 };
+        let point2 = Point2D { x: 1.0, y: 1.0 };
+        let point3 = Point2D { x: 0.0, y: 1.0 };
 
         let circle_from_three_points = Circle::from_points(&point1, &point2, &point3);
         let expected_circle = Circle { x: 0.5, y: 0.5, radius: 0.7071067811865476 }; // Radius is approximately sqrt(2)/2
@@ -55,8 +55,8 @@ mod tests {
 
     #[test]
     fn test_valid_circle_creation() {
-        let point1 = Point { x: 0.0, y: 0.0 };
-        let point2 = Point { x: 4.0, y: 0.0 };
+        let point1 = Point2D { x: 0.0, y: 0.0 };
+        let point2 = Point2D { x: 4.0, y: 0.0 };
         let radius = 2.0;
 
         let circle = Circle::from_points_and_radius(&point1, &point2, radius);
@@ -75,12 +75,12 @@ mod tests {
     fn test_circle_line_intersection() {
         let circle = Circle { x: 0.0, y: 0.0, radius: 5.0 };
 
-        let line_point1 = Point { x: -8.0, y: 0.0 };
-        let line_point2 = Point { x: 8.0, y: 0.0 };
+        let line_point1 = Point2D { x: -8.0, y: 0.0 };
+        let line_point2 = Point2D { x: 8.0, y: 0.0 };
         let intersections = circle.find_line_intersection(&line_point1, &line_point2);
         assert_eq!(intersections.len(), 2);
-        assert!(intersections.contains(&Point { x: -5.0, y: 0.0 }));
-        assert!(intersections.contains(&Point { x: 5.0, y: 0.0 }));
+        assert!(intersections.contains(&Point2D { x: -5.0, y: 0.0 }));
+        assert!(intersections.contains(&Point2D { x: 5.0, y: 0.0 }));
 
 
     }

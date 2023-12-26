@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 use log::{info};
-use crate::graphical::point::Point;
+use crate::graphical::point_2d::Point2D;
 use crate::graphical::rectangle::Rectangle;
 
 #[derive(Debug, PartialEq)]
@@ -14,7 +14,7 @@ pub struct Circle {
 
 impl Circle {
     /// 通过两点和半径创建圆
-    pub fn from_points_and_radius(point1: &Point, point2: &Point, radius: f64) -> Option<Circle> {
+    pub fn from_points_and_radius(point1: &Point2D, point2: &Point2D, radius: f64) -> Option<Circle> {
         // 计算圆心的中点坐标
         let center_x = (point1.x + point2.x) / 2.0;
         let center_y = (point1.y + point2.y) / 2.0;
@@ -34,7 +34,7 @@ impl Circle {
         } else { None }
     }
     /// 三个点算圆
-    pub fn from_points(p1: &Point, p2: &Point, p3: &Point) -> Option<Circle> {
+    pub fn from_points(p1: &Point2D, p2: &Point2D, p3: &Point2D) -> Option<Circle> {
         // 计算圆心坐标 (h, k)
         let h = (p1.x + p2.x) / 2.0;
         let k = (p1.y + p2.y) / 2.0;
@@ -68,11 +68,11 @@ impl Circle {
         distance_squared <= self.radius.powi(2)
     }
     /// 生产圆上的点
-    pub fn generate_points(&self, num_points: usize) -> Vec<Point> {
+    pub fn generate_points(&self, num_points: usize) -> Vec<Point2D> {
         return generate_points_on_circle(self.x, self.y, self.radius, num_points);
     }
     /// 判断点是否在圆弧上
-    pub fn is_point_on_arc(&self, start_angle: f64, end_angle: f64, point: &Point) -> bool {
+    pub fn is_point_on_arc(&self, start_angle: f64, end_angle: f64, point: &Point2D) -> bool {
         let distance_squared = (point.x - self.x).powi(2) + (point.y - self.y).powi(2);
         let distance = distance_squared.sqrt();
 
@@ -80,7 +80,7 @@ impl Circle {
     }
 
     /// 判断夹角是否在指定范围内的辅助函数
-    pub fn is_angle_in_range(&self, start_angle: f64, end_angle: f64, point: &Point) -> bool {
+    pub fn is_angle_in_range(&self, start_angle: f64, end_angle: f64, point: &Point2D) -> bool {
         let angle = (point.y - self.x).atan2(point.x - self.y);
         let positive_angle = if angle < 0.0 {
             2.0 * PI + angle
@@ -90,13 +90,13 @@ impl Circle {
         positive_angle >= start_angle && positive_angle <= end_angle
     }
 
-    pub fn is_point_on_circle_boundary(point: &Point, circle: &Circle) -> bool {
+    pub fn is_point_on_circle_boundary(point: &Point2D, circle: &Circle) -> bool {
         let distance = distance_between_points(point.x, point.y, circle.x, circle.y);
         distance == circle.radius
     }
 
     /// 寻找焦点
-    pub fn find_line_intersection(&self, p1: &Point, p2: &Point) -> Vec<Point> {
+    pub fn find_line_intersection(&self, p1: &Point2D, p2: &Point2D) -> Vec<Point2D> {
         let dx = p2.x - p1.x;
         let dy = p2.y - p1.y;
 
@@ -117,14 +117,14 @@ impl Circle {
         let mut intersections = Vec::new();
 
         if t1 >= 0.0 && t1 <= 1.0 {
-            intersections.push(Point {
+            intersections.push(Point2D {
                 x: p1.x + t1 * dx,
                 y: p1.y + t1 * dy,
             });
         }
 
         if t2 >= 0.0 && t2 <= 1.0 {
-            intersections.push(Point {
+            intersections.push(Point2D {
                 x: p1.x + t2 * dx,
                 y: p1.y + t2 * dy,
             });
@@ -209,7 +209,7 @@ pub fn distance_between_points(x1: f64, y1: f64, x2: f64, y2: f64) -> f64 {
 }
 
 
-pub fn generate_points_on_circle(center_x: f64, center_y: f64, radius: f64, num_points: usize) -> Vec<Point> {
+pub fn generate_points_on_circle(center_x: f64, center_y: f64, radius: f64, num_points: usize) -> Vec<Point2D> {
     // 存储生成的点的容器
     let mut points = Vec::with_capacity(num_points);
 
@@ -221,7 +221,7 @@ pub fn generate_points_on_circle(center_x: f64, center_y: f64, radius: f64, num_
         let angle = i as f64 * angle_step;
         let x = center_x + radius * angle.cos();
         let y = center_y + radius * angle.sin();
-        points.push(Point { x, y });
+        points.push(Point2D { x, y });
     }
 
     points

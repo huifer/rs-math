@@ -1,5 +1,5 @@
 use crate::graphical::circle::Circle;
-use crate::graphical::point::Point;
+use crate::graphical::point_2d::Point2D;
 
 #[derive(Debug, PartialEq)]
 pub struct Rectangle {
@@ -64,16 +64,16 @@ impl Rectangle {
     }
 
     /// 求四个顶点
-    fn rectangle_corners(r: &Rectangle) -> (Point, Point, Point, Point) {
+    fn rectangle_corners(r: &Rectangle) -> (Point2D, Point2D, Point2D, Point2D) {
         (
             // 左上角
-            Point { x: r.x1, y: r.y1 },
+            Point2D { x: r.x1, y: r.y1 },
             // 右上角
-            Point { x: r.x2, y: r.y1 },
+            Point2D { x: r.x2, y: r.y1 },
             // 左下角
-            Point { x: r.x1, y: r.y2 },
+            Point2D { x: r.x1, y: r.y2 },
             // 右下角
-            Point { x: r.x2, y: r.y2 },
+            Point2D { x: r.x2, y: r.y2 },
         )
     }
 

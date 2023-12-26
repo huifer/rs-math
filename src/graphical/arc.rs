@@ -1,5 +1,5 @@
-use crate::graphical::point::Point;
-use crate::graphical::tangent::LinearEquation;
+use crate::graphical::point_2d::Point2D;
+use crate::graphical::linear_equation::LinearEquation;
 
 #[derive(Debug, PartialEq)]
 struct Arc {
@@ -96,7 +96,7 @@ impl Arc {
         Arc { radius, theta }
     }
     /// 生成圆弧上的点
-    pub fn generate_points(&self, num_points: usize) -> Vec<Point> {
+    pub fn generate_points(&self, num_points: usize) -> Vec<Point2D> {
         let mut points = Vec::with_capacity(num_points);
 
         for i in 0..num_points {
@@ -104,7 +104,7 @@ impl Arc {
             let current_theta = i as f64 * theta_increment;
             let x = self.radius * current_theta.cos();
             let y = self.radius * current_theta.sin();
-            points.push(Point { x, y });
+            points.push(Point2D { x, y });
         }
 
         points
