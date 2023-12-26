@@ -308,3 +308,9 @@ pub fn intersect(&self, other: &Rectangle) -> bool {
 $$ x_1 \leq x_3 \quad \text{且} \quad x_2 \geq x_4 \quad \text{且} \quad y_1 \leq y_3 \quad \text{且} \quad y_2 \geq y_4 $$
 
 **程序解如下**
+```rust
+    // 判断是否包含矩形
+    pub fn contains(&self, other: &Rectangle) -> bool {
+        self.x1 <= other.x1 && self.x2 >= other.x2 && self.y1 <= other.y1 && self.y2 >= other.y2
+    }
+```
