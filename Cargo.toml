@@ -2,7 +2,6 @@
 name = "rs-math"
 version = "0.1.0"
 edition = "2021"
-license= "GNU-V3"
 license-file="LICENSE"
 description="""
 This is a math library, a math library written in Rust.
