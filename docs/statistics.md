@@ -401,7 +401,9 @@ $$
 
 
 
-### 对数正态分 
+### 对数正态分布
+
+
 ### P-P图 Probability-Probability Plot
 ### Q-Q图 Quantile-Quantile Plot
 
