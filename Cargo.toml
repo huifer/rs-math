@@ -2,9 +2,18 @@
 name = "rs-math"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
+license= "GNU-V3"
+license-file="LICENSE"
+description="""
+This is a math library, a math library written in Rust.
+Write in a native way as much as possible in this math library, reducing the use of third-party libraries.
+There may be some errors in this math library, and we hope that users can provide suggestions for modification. I will continue to track related issues when submitting Issues, and if possible, please also participate in my project.
+"""
+readme="Readme.md"
+repository="https://github.com/huifer/rs-math.git"
+homepage="https://huifer.github.io/rs-math/"
+keywords=["math","rust","utils"]
+authors=["Zen Huifer <huifer97@163.com>"]
 [dependencies]
 approx = { version = "0.5.0", features = [] }
 log = "0.4.20"
