@@ -101,17 +101,71 @@ impl Vector2D {
         Vector2D { x: self.x + other.x, y: self.y + other.y }
     }
 
-    // 向量减法
+    /// 向量减法。
+    ///
+    /// # 参数
+    ///
+    /// - `other`：要减去的向量。
+    ///
+    /// # 返回值
+    ///
+    /// 返回新的向量，表示两个向量的差。
+    ///
+    /// # 示例
+    ///
+    /// ```
+    /// use rs_math::vector::vector_2d::Vector2D;
+    ///
+    /// let vector1 = Vector2D { x: 3.0, y: 2.0 };
+    /// let vector2 = Vector2D { x: 1.0, y: 4.0 };
+    /// let result = vector1.subtract(vector2);
+    /// ```
     pub fn subtract(self, other: Vector2D) -> Vector2D {
         Vector2D { x: self.x - other.x, y: self.y - other.y }
     }
 
-    // 向量点积
+    /// 向量点积。
+    ///
+    /// # 参数
+    ///
+    /// - `other`：要进行点积计算的向量。
+    ///
+    /// # 返回值
+    ///
+    /// 返回两个向量的点积结果。
+    ///
+    /// # 示例
+    ///
+    /// ```
+    /// use rs_math::vector::vector_2d::Vector2D;
+    ///
+    /// let vector1 = Vector2D { x: 3.0, y: 2.0 };
+    /// let vector2 = Vector2D { x: 1.0, y: 4.0 };
+    /// let result = vector1.dot_product(vector2);
+    /// ```
     pub fn dot_product(self, other: Vector2D) -> f64 {
         self.x * other.x + self.y * other.y
     }
 
-    // 向量叉积
+    /// 向量叉积。
+    ///
+    /// # 参数
+    ///
+    /// - `other`：要进行叉积计算的向量。
+    ///
+    /// # 返回值
+    ///
+    /// 返回两个向量的叉积结果。
+    ///
+    /// # 示例
+    ///
+    /// ```
+    /// use rs_math::vector::vector_2d::Vector2D;
+    ///
+    /// let vector1 = Vector2D { x: 3.0, y: 2.0 };
+    /// let vector2 = Vector2D { x: 1.0, y: 4.0 };
+    /// let result = vector1.cross_product(vector2);
+    /// ```
     pub fn cross_product(self, other: Vector2D) -> f64 {
         self.x * other.y - self.y * other.x
     }

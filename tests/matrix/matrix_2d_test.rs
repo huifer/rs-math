@@ -1,7 +1,7 @@
 // 单元测试模块
 #[cfg(test)]
 mod tests {
-    use rs_math::matrix::matrix_2d::Matrix;
+    use rs_math::matrix::matrix_2d::Matrix2D;
 
     #[test]
     fn test_create_matrix() {
@@ -11,7 +11,7 @@ mod tests {
             vec![4.0, 5.0, 6.0],
         ];
 
-        let matrix = Matrix::new(matrix_data.clone());
+        let matrix = Matrix2D::new(matrix_data.clone());
 
         // 验证矩阵的行数和列数是否正确
         assert_eq!(matrix.rows, 2);

@@ -1,15 +1,17 @@
 use std::f64::EPSILON;
 
+/// 表示具有指定行数和列数的二维矩阵。
 #[derive(Debug, PartialEq)]
-pub struct Matrix {
+pub struct Matrix2D {
+    /// 矩阵的行数。
     pub rows: usize,
-    // 行数
+    /// 矩阵的列数。
     pub cols: usize,
-    // 列数
-    pub data: Vec<Vec<f64>>, // 存储矩阵元素的二维向量
+    /// 以二维向量形式存储在矩阵中的数据。
+    pub data: Vec<Vec<f64>>,
 }
 
-impl Clone for Matrix {
+impl Clone for Matrix2D {
     fn clone(&self) -> Self {
         let mut cloned_data = Vec::with_capacity(self.rows);
 
@@ -18,7 +20,7 @@ impl Clone for Matrix {
             cloned_data.push(cloned_row);
         }
 
-        Matrix {
+        Matrix2D {
             rows: self.rows,
             cols: self.cols,
             data: cloned_data,
@@ -26,9 +28,24 @@ impl Clone for Matrix {
     }
 }
 #[allow(dead_code)]
-impl Matrix {
-    // 创建一个新的矩阵
-    pub fn new(data: Vec<Vec<f64>>) -> Matrix {
+impl Matrix2D {
+    /// 创建一个新的矩阵。
+    ///
+    /// # 参数
+    ///
+    /// * `data` - 以二维向量形式表示的矩阵数据。
+    ///
+    /// # 返回
+    ///
+    /// 返回具有指定数据的 `Matrix2D` 实例。
+    ///
+    /// # 错误
+    ///
+    /// 如果输入数据不合法，将引发断言错误：
+    /// - 矩阵必须至少有一行
+    /// - 矩阵必须至少有一列
+    /// - 所有行必须具有相同的列数
+    pub fn new(data: Vec<Vec<f64>>) -> Matrix2D {
         // 检查输入数据的合法性
         let rows = data.len();
         assert!(rows > 0, "Matrix must have at least one row");
@@ -40,7 +57,7 @@ impl Matrix {
             assert_eq!(row.len(), cols, "All rows must have the same number of columns");
         }
 
-        Matrix { rows, cols, data }
+        Matrix2D { rows, cols, data }
     }
 
     // 打印矩阵的方法
@@ -52,8 +69,16 @@ impl Matrix {
             println!();
         }
     }
-    // 矩阵加法
-    pub fn add(&self, other: &Matrix) -> Option<Matrix> {
+    /// 执行矩阵加法运算。
+    ///
+    /// # 参数
+    ///
+    /// * `other` - 与当前矩阵相加的另一个矩阵。
+    ///
+    /// # 返回
+    ///
+    /// 如果矩阵维度相同，返回包含相加结果的 `Matrix2D` 实例；如果维度不同，返回 `None`。
+    pub fn add(&self, other: &Matrix2D) -> Option<Matrix2D> {
         if self.rows == other.rows && self.cols == other.cols {
             let mut result_data = Vec::with_capacity(self.rows);
             for i in 0..self.rows {
@@ -63,7 +88,7 @@ impl Matrix {
                 }
                 result_data.push(row);
             }
-            Some(Matrix {
+            Some(Matrix2D {
                 rows: self.rows,
                 cols: self.cols,
                 data: result_data,
@@ -73,8 +98,16 @@ impl Matrix {
         }
     }
 
-    // 矩阵减法
-    pub fn subtract(&self, other: &Matrix) -> Option<Matrix> {
+    /// 执行矩阵减法运算。
+    ///
+    /// # 参数
+    ///
+    /// * `other` - 从当前矩阵中减去的另一个矩阵。
+    ///
+    /// # 返回
+    ///
+    /// 如果矩阵维度相同，返回包含相减结果的 `Matrix2D` 实例；如果维度不同，返回 `None`。
+    pub fn subtract(&self, other: &Matrix2D) -> Option<Matrix2D> {
         if self.rows == other.rows && self.cols == other.cols {
             let mut result_data = Vec::with_capacity(self.rows);
             for i in 0..self.rows {
@@ -84,7 +117,7 @@ impl Matrix {
                 }
                 result_data.push(row);
             }
-            Some(Matrix {
+            Some(Matrix2D {
                 rows: self.rows,
                 cols: self.cols,
                 data: result_data,
@@ -94,13 +127,24 @@ impl Matrix {
         }
     }
 
-    /// 矩阵的乘法
-    pub fn multiply(&self, other: &Matrix) -> Matrix {
+    /// 执行矩阵乘法运算。
+    ///
+    /// # 参数
+    ///
+    /// * `other` - 与当前矩阵相乘的另一个矩阵。
+    ///
+    /// # 返回
+    ///
+    /// 包含相乘结果的 `Matrix2D` 实例。
+    ///
+    /// # 注意
+    ///
+    /// 如果矩阵维度不符合相乘规则，将会引发 panic。
+    pub fn multiply(&self, other: &Matrix2D) -> Matrix2D {
         // 检查矩阵维度是否允许相乘
         if self.cols != other.rows {
             panic!("Matrix dimensions do not match for multiplication.")
         }
-
 
         let mut result_data = Vec::with_capacity(self.rows);
         for i in 0..self.rows {
@@ -115,15 +159,19 @@ impl Matrix {
             result_data.push(row);
         }
 
-        Matrix {
+        Matrix2D {
             rows: self.rows,
             cols: other.cols,
             data: result_data,
         }
     }
 
-    /// 转置矩阵
-    pub fn transpose(&self) -> Matrix {
+    /// 获取当前矩阵的转置。
+    ///
+    /// # 返回
+    ///
+    /// 包含转置结果的 `Matrix2D` 实例。
+    pub fn transpose(&self) -> Matrix2D {
         let mut result_data = Vec::with_capacity(self.cols);
         for j in 0..self.cols {
             let mut row = Vec::with_capacity(self.rows);
@@ -133,7 +181,7 @@ impl Matrix {
             result_data.push(row);
         }
 
-        Matrix {
+        Matrix2D {
             rows: self.cols,
             cols: self.rows,
             data: result_data,
@@ -169,7 +217,7 @@ impl Matrix {
                         .map(|(_, row)| row.iter().enumerate().filter(|&(j, _)| j != col).map(|(_, &val)| val).collect())
                         .collect();
 
-                    let submatrix = Matrix {
+                    let submatrix = Matrix2D {
                         rows: self.rows - 1,
                         cols: self.cols - 1,
                         data: submatrix_data,
@@ -188,7 +236,7 @@ impl Matrix {
         }
     }
     // 计算矩阵的逆矩阵
-    pub fn inverse(&self) -> Option<Matrix> {
+    pub fn inverse(&self) -> Option<Matrix2D> {
         // 检查矩阵是否为方阵
         if self.rows != self.cols {
             return None;
@@ -214,14 +262,14 @@ impl Matrix {
             inv_a_data.push(row);
         }
 
-        Some(Matrix {
+        Some(Matrix2D {
             rows: self.rows,
             cols: self.cols,
             data: inv_a_data,
         })
     }
     // 计算矩阵的伴随矩阵
-    fn adjoint(&self) -> Matrix {
+    fn adjoint(&self) -> Matrix2D {
         // 计算代数余子式
         let mut adj_a_data = Vec::with_capacity(self.rows);
         for i in 0..self.rows {
@@ -235,7 +283,7 @@ impl Matrix {
                     .map(|(_, row)| row.iter().enumerate().filter(|&(col_idx, _)| col_idx != j).map(|(_, &val)| val).collect())
                     .collect();
 
-                let submatrix = Matrix {
+                let submatrix = Matrix2D {
                     rows: self.rows - 1,
                     cols: self.cols - 1,
                     data: submatrix_data,
@@ -247,7 +295,7 @@ impl Matrix {
             adj_a_data.push(row);
         }
 
-        Matrix {
+        Matrix2D {
             rows: self.rows,
             cols: self.cols,
             data: adj_a_data,
@@ -262,7 +310,7 @@ impl Matrix {
         }
 
         // 构造特征值方程的左侧矩阵 A - λI
-        let a_minus_lambda_i: Matrix = self.subtract_identity();
+        let a_minus_lambda_i: Matrix2D = self.subtract_identity();
 
         // 求解特征值
         let eigenvalues = match a_minus_lambda_i.determinant() {
@@ -281,7 +329,7 @@ impl Matrix {
     }
 
     // 辅助方法：构造 A - λI
-    fn subtract_identity(&self) -> Matrix {
+    fn subtract_identity(&self) -> Matrix2D {
         let mut result_data = Vec::with_capacity(self.rows);
         for i in 0..self.rows {
             let mut row = Vec::with_capacity(self.cols);
@@ -296,7 +344,7 @@ impl Matrix {
             result_data.push(row);
         }
 
-        Matrix {
+        Matrix2D {
             rows: self.rows,
             cols: self.cols,
             data: result_data,
@@ -324,7 +372,7 @@ impl Matrix {
             augmented_matrix_data.push(row);
         }
 
-        let mut augmented_matrix = Matrix {
+        let mut augmented_matrix = Matrix2D {
             rows: self.rows,
             cols: self.cols + 1,
             data: augmented_matrix_data,
@@ -372,7 +420,7 @@ impl Matrix {
     fn swap_rows(&self, i: usize, j: usize) {
         let mut data_copy = self.data.clone();
         data_copy.swap(i, j);
-        Matrix {
+        Matrix2D {
             rows: self.rows,
             cols: self.cols,
             data: data_copy,
@@ -383,15 +431,15 @@ impl Matrix {
 
 
     // 计算矩阵的奇异值分解
-    pub fn svd(&self) -> (Matrix, Matrix, Matrix) {
+    pub fn svd(&self) -> (Matrix2D, Matrix2D, Matrix2D) {
         let mut u = self.clone();
         let mut vt = self.clone();
 
-        let mut s = Matrix::zeros(self.cols, self.cols);
+        let mut s = Matrix2D::zeros(self.cols, self.cols);
 
         // 初始化 U、Σ、V
-        let mut ut = Matrix::eye(self.cols);
-        let mut v = Matrix::eye(self.cols);
+        let mut ut = Matrix2D::eye(self.cols);
+        let mut v = Matrix2D::eye(self.cols);
 
         // 迭代次数，可以根据需要调整
         let max_iter = 100;
@@ -400,14 +448,14 @@ impl Matrix {
             // U的计算
             let uu = u.transpose().multiply(&u);
             let (u_eigenvalues, u_eigenvectors) = uu.eigen();
-            let u_sort_indices = Matrix::argsort(&u_eigenvalues);
+            let u_sort_indices = Matrix2D::argsort(&u_eigenvalues);
 
             u = u.multiply_by_vector(&u_eigenvectors.column(u_sort_indices[0]));
 
             // V的计算
             let vv = vt.transpose().multiply(&vt);
             let (v_eigenvalues, v_eigenvectors) = vv.eigen();
-            let v_sort_indices = Matrix::argsort(&v_eigenvalues);
+            let v_sort_indices = Matrix2D::argsort(&v_eigenvalues);
 
             vt = vt.multiply_by_vector(&v_eigenvectors.column(v_sort_indices[0])).transpose();
 
@@ -427,8 +475,8 @@ impl Matrix {
         (ut, s, v)
     }
     // 计算矩阵乘以向量
-    pub fn multiply_by_vector(&self, vector: &Vec<f64>) -> Matrix {
-        let mut result = Matrix::zeros(self.rows, 1);
+    pub fn multiply_by_vector(&self, vector: &Vec<f64>) -> Matrix2D {
+        let mut result = Matrix2D::zeros(self.rows, 1);
 
         for i in 0..self.rows {
             for j in 0..1 {
@@ -441,8 +489,8 @@ impl Matrix {
         result
     }
     // 单位矩阵
-    pub fn eye(size: usize) -> Matrix {
-        let mut result = Matrix::zeros(size, size);
+    pub fn eye(size: usize) -> Matrix2D {
+        let mut result = Matrix2D::zeros(size, size);
         for i in 0..size {
             result.data[i][i] = 1.0;
         }
@@ -450,20 +498,20 @@ impl Matrix {
     }
 
     // 全0矩阵
-    pub fn zeros(rows: usize, cols: usize) -> Matrix {
-        Matrix {
+    pub fn zeros(rows: usize, cols: usize) -> Matrix2D {
+        Matrix2D {
             rows,
             cols,
             data: vec![vec![0.0; cols]; rows],
         }
     }
     // 求解特征值和特征向量
-    pub fn eigen(&self) -> (Vec<f64>, Matrix) {
+    pub fn eigen(&self) -> (Vec<f64>, Matrix2D) {
         // 简化处理，假设矩阵是实对称矩阵
         // 在实际应用中，可以使用更复杂的算法来处理一般情况
         let n = self.rows;
         let mut a = self.clone();
-        let mut v = Matrix::eye(n);
+        let mut v = Matrix2D::eye(n);
 
         let mut d = Vec::with_capacity(n);
         for i in 0..n {
@@ -503,7 +551,7 @@ impl Matrix {
                         let c = f64::sqrt(0.5 + 0.5 * _h);
                         let  s = -0.5 * _h / c;
                         _h = 0.5 * (g / c) * (_h / c);
-                        let mut b = Matrix::eye(n);
+                        let mut b = Matrix2D::eye(n);
                         b.data[ip][ip] = c;
                         b.data[iq][iq] = c;
                         b.data[ip][iq] = s;
@@ -528,7 +576,7 @@ impl Matrix {
                         let s = t * c;
 
                         let _z = 1.0 / f64::sqrt(1.0 + t * t);
-                        let mut b = Matrix::eye(n);
+                        let mut b = Matrix2D::eye(n);
                         b.data[ip][ip] = c;
                         b.data[iq][iq] = c;
                         b.data[ip][iq] = s;
